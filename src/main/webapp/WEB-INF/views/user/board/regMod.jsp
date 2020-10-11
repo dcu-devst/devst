@@ -261,7 +261,7 @@
 						if('${loginUserSec.memProfileImage}' != null){
 							$('.boardComment:nth-child(1)').find('.profileImg > img').attr('src','/resources/img/defaultProfile.jpg')
 						} else {
-							$('.boardComment:nth-child(1)').find('.profileImg > img').attr('src','${loginUserSec.memProfileImage}')
+							$('.boardComment:nth-child(1)').find('.profileImg > img').attr('src','/resources/uploadImg/profile/${loginUserSec.memProfileImage}')
 						}
 					},error:function(){
 						console.log('댓글 ajax 에러')
