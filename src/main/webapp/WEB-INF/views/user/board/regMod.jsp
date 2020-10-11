@@ -132,7 +132,7 @@
 						 	<img src="/resources/img/defaultProfile.jpg">
 						 </c:if>
 						 <c:if test="${comment.profile_img ne ''}">
-						 	<img src="${comment.profile_img }">
+						 	<img src="/resources/uploadImg/profile/${comment.mem_id }/${comment.profile_img }">
 						 </c:if>
 							
 							<p class="boardCommentWriter">${comment.mem_nickname }</p>
