@@ -157,6 +157,7 @@
 				<div class="doWriteBox">
 					<div class="profileImg">
 					<sec:authorize access="isAuthenticated()">
+					
 						<c:if test="${loginUserSec.memProfileImage eq null }">
 							<img src="/resources/img/defaultProfile.jpg">	
 						</c:if>
@@ -258,10 +259,10 @@
 						$('.boardCommentWrap').prepend(item);
 						$('.doWriteContent').val('');
 						alert('댓글작성에 성공했습니다.')
-						if('${loginUserSec.memProfileImage}' != null){
+						if('${loginUserSec.memProfileImage}' == null){
 							$('.boardComment:nth-child(1)').find('.profileImg > img').attr('src','/resources/img/defaultProfile.jpg')
 						} else {
-							$('.boardComment:nth-child(1)').find('.profileImg > img').attr('src','/resources/uploadImg/profile/${loginUserSec.memProfileImage}')
+							$('.boardComment:nth-child(1)').find('.profileImg > img').attr('src','/resources/uploadImg/profile/${loginUserSec.memId}/${loginUserSec.memProfileImage}')
 						}
 					},error:function(){
 						console.log('댓글 ajax 에러')
