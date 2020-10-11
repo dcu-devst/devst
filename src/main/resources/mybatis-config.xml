@@ -11,6 +11,7 @@
 	<typeAliases>
 		<typeAlias type="kr.co.devst.model.BoardVO" alias="BoardVO"/>
 		<typeAlias type="kr.co.devst.model.UserVO" alias="UserVO"/>
+		<typeAlias type="kr.co.devst.model.CommentVO" alias="CommentVO"/>
 	</typeAliases>
 	
 </configuration>

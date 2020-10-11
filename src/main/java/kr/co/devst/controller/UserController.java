@@ -6,17 +6,20 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.devst.model.UserVO;
 import kr.co.devst.service.MailService;
 import kr.co.devst.service.UserService;
+import kr.co.devst.utils.Utils;
 
 @Controller
 @RequestMapping("/devst/user/*")
@@ -109,6 +112,36 @@ public class UserController {
 		}
 		return resultAddr;
 	}
-
+	
+	@RequestMapping(value = "/devst/user/info", method = RequestMethod.GET)
+	public String goMyInfo(Model model,HttpServletRequest request) {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		if("anonymousUser".equals(principal)) {
+			log.debug("****login정보 없음**** ");
+			return "redirect:/";
+		} 
+		UserVO loginUser = (UserVO) principal;
+		log.debug("profile : "+loginUser.getMemProfileImage());
+		String path = request.getSession().getServletContext().getRealPath("uploadImg");
+		path+="/profile/"+loginUser.getMemId();
+		model.addAttribute("path",path);
+		model.addAttribute("myInfo", loginUser);
+		
+		
+		return "/user/myInfo/userInfo";
+	}
+	
+	@RequestMapping(value = "/devst/user/info", method = RequestMethod.POST, headers = ("content-type=multipart/*"))
+	public String modMyInfo(Model model, @RequestParam(value = "multiFile")MultipartFile multiFile, UserVO myInfo, HttpServletRequest request) {
+		
+		String dbFileNm =  Utils.uploadFile(multiFile,"profile", request,Utils.parseToStr(myInfo.getMemId(),"15"));//에러시 15관리자 폴더에 저장
+		myInfo.setMemProfileImage(dbFileNm);
+		
+		int result = userService.modUserInfo(myInfo);
+		log.debug("result : "+result);
+		
+		return "/user/myInfo/userInfo";
+	}
 	
 }

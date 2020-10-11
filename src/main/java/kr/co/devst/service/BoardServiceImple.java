@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.devst.dao.BoardDao;
 import kr.co.devst.model.BoardVO;
+import kr.co.devst.model.CommentVO;
 
 
 @Service
@@ -120,6 +121,20 @@ public class BoardServiceImple implements BoardService{
 	@Override
 	public int boardMaxPageNum(String category) {
 		return boardDao.boardMaxPageNum(category);
+	}
+
+
+
+	@Override
+	public int dowriteBrdComment(CommentVO param) {
+		return boardDao.dowriteBrdComment(param);
+	}
+
+
+
+	@Override
+	public List<Map<String, String>> getBrdComment5(int start, int num, int brdNum) {
+		return boardDao.getBrdComment5(start, num, brdNum);
 	}
 
 }

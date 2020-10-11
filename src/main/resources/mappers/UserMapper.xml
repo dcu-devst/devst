@@ -23,4 +23,8 @@
 		INSERT INTO member_tb (mem_email, mem_password, mem_nickname, mem_profile_image) 
 		VALUES (#{memEmail}, #{memPassword}, #{memNickname}, #{memProfileImage})
 	</insert>
+	
+	<update id="modUserInfo">
+		UPDATE member_tb SET mem_profile_image = #{memProfileImage}
+	</update>
 </mapper>

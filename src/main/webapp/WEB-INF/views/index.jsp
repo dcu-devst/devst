@@ -10,14 +10,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="_csrf_header" content="${_csrf.headerName}" />
-<meta name="_csrf" content="${_csrf.token}" />
+<%-- <meta name="_csrf_header" content="${_csrf.headerName}" />
+<meta name="_csrf" content="${_csrf.token}" /> --%>
 <meta charset="UTF-8">
 <title>devst</title>
 <link href="<c:url value="/resources/css/reset.css" />"  rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
 <link href="<c:url value="/resources/css/main.css" />"  rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
 <script src="/resources/js/main.js"/></script>
 
 

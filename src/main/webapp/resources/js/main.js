@@ -28,7 +28,6 @@ $(function(){
 	
 	
 	
-	
 	/*
 	$('.mainItems').click(function(){
 		var category = $(this).children('div')[0].className;
@@ -43,7 +42,6 @@ $(function(){
 	
 	
 	$('#logo').click(function(){
-		alert('d')
 		location.href="/";
 	});
 	

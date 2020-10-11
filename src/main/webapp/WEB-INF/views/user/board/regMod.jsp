@@ -10,8 +10,10 @@
 <c:if test="${oneInfo.brd_category eq '일반'}">
 <c:set var="boardList" value="/devst/board/category?no=1"></c:set>
 </c:if>
-<sec:authentication property="principal"  var="loginUserSec"/>
 
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal"  var="loginUserSec"/>						
+</sec:authorize>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,6 +24,9 @@
 <style>
 	.boardWrap{width:1200px;  margin:0 auto;}
 	.boardBox, .boardCommentBox{margin:0 auto; width:800px;}
+	
+	.boardCommentDesc{border:1px solid #ddd; box-sizing: border-box; margin:10px 0;}
+	
 	.boardBox{margin-bottom: 100px;}
 	.boardCategory, .boardTitle, .boardHashtag, .boardWriter{width:800px; height:30px; margin: 10px 0;}
 	.boardCategory{width:810px;}
@@ -29,18 +34,28 @@
 	.doBtn, .doModBtn{position:absolute; bottom:-61px;right:0; width: 90px;}
 	.cancleBtn{position:absolute; bottom:-60px; left:0; width: 90px;}
 	.btnBox{width:800px;position:relative;}
-	.dummyLine{background-color:#ddd; width: 90%; height: 1px;}
+	
+	.like , .comment{color: black; line-height: 25px;  font-size: 25px;}
 	.clickBox{margin: 10px  0;}
 	#msg{color:red;}
-	.profileImg {width: 50px; height: 50px;  border-radius: 70%; overflow: hidden;}
-	.profile {width: 100%; height: 100%; object-fit: cover;}
-	.like , .comment{color: black; line-height: 25px;  font-size: 25px;}
+	.profileImg{ float:left; margin-right: 20px;}
+	.profileImg > img{width: 120px; height: 120px;}
+	.boardCommentWriter{text-align: center; margin-bottom: 0;}
+	.boardCommentContent{padding-top: 20px;}
+	.boardCommentDesc{overflow: hidden; position: relative;}
+	.boardCommentBtn{position: absolute; right: 10px; bottom: 0;}
+	.boardCommentBtn > i{font-size: 20px; cursor:pointer; margin:10px;}
+	.boardCommentBtn > i:nth-child(1):hover{color:blue;}
+	.boardCommentBtn > i:nth-child(2):hover{color:red;}
+	.doWriteBox{overflow: hidden; position: relative; height: 180px;}
+	.doWriteContent{width:658px; padding: 0; height: 120px; font-size: 16px; padding-top: 20px;}
+	.doWriteBtn{position: absolute; right: 3px; bottom: 0px;}
 </style>
 </head>
 <body>
 	
 	<a href="${boardList }">게시글 더 보기</a>
-	
+	${loginUserSec }
 	
 	<div class="boardWrap">
 		<div class="boardBox">
@@ -68,9 +83,9 @@
 						<button type="submit" class="btn btn-dark doBtn">&nbsp 작성 &nbsp</button>
 					</c:if>
 					<sec:authorize access="isAuthenticated()">
-					<c:if test="${oneInfo.mem_nickname eq loginUserSec.memNickname}">
-						<button type="button" class="btn btn-dark doModBtn" onclick="doMod(${oneInfo.brd_id})">수정</button>
-					</c:if> 
+						<c:if test="${oneInfo.mem_nickname eq loginUserSec.memNickname}">
+							<button type="button" class="btn btn-dark doModBtn" onclick="doMod(${oneInfo.brd_id})">수정</button>
+						</c:if> 
 					</sec:authorize>
 					<button type="button" class="btn btn-success cancleBtn" onclick="doCancle()">취소</button>
 				</div>
@@ -87,13 +102,80 @@
 				<span class="like">좋아요</span><i class="far fa-thumbs-up">24</i>
 				<span class="comment">댓글</span><i class="far fa-comment">12</i>
 			</div>
-			<h3>댓글</h3>
-			<div class="boardComment">
-				<div class="dummyLine"></div>
-				<div class="profileImg" style="background: #BDBDBD;">
-				    <img class="profile" src="https://placehold.it/50x50">
+			<h3 class="commentTitle">댓글</h3>
+			<div class="boardCommentWrap">
+			<!-- 댓글 원형 -->
+			<!-- <div class="boardComment">
+				
+				<div class="boardCommentDesc">
+					<div class="profileImg">
+						<img src="https://placehold.it/120x120">
+						<p class="boardCommentWriter">작성자</p>
+					</div>
+					
+					<p class="boardCommentContent">안녕하세요 안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요ㅍ </p>
+					<div class="boardCommentBtn">
+						<i class="far fa-thumbs-up">24</i>
+						<i class="far fa-thumbs-down">24</i>
+					</div>
 				</div>
+			</div> -->
+			<!--  -->
+			
+		
+			<c:forEach items="${commentList}" var="comment">
+				<div class="boardComment">
+					
+					<div class="boardCommentDesc">
+						<div class="profileImg">
+						 <c:if test="${comment.profile_img eq ''}">
+						 	<img src="/resources/img/defaultProfile.jpg">
+						 </c:if>
+						 <c:if test="${comment.profile_img ne ''}">
+						 	<img src="${comment.profile_img }">
+						 </c:if>
+							
+							<p class="boardCommentWriter">${comment.mem_nickname }</p>
+						</div>
+						
+						<p class="boardCommentContent">${comment.content }</p>
+						<div class="boardCommentBtn">
+							<i class="far fa-thumbs-up">${comment.like_count }</i>
+							<i class="far fa-thumbs-down">${comment.dislike_count }</i>
+						</div>
+					</div>
+				</div>		
+			
+			</c:forEach>
+			
+			
+			
 			</div>
+			<!--  -->
+			<h3 >댓글작성</h3>
+			
+				<div class="doWriteBox">
+					<div class="profileImg">
+					<sec:authorize access="isAuthenticated()">
+						<c:if test="${loginUserSec.memProfileImage eq null }">
+							<img src="/resources/img/defaultProfile.jpg">	
+						</c:if>
+						<c:if test="${loginUserSec.memProfileImage ne null }">
+							<img src="/resources/uploadImg/profile/${loginUserSec.memId }/${loginUserSec.memProfileImage}">	
+						</c:if> 
+					</sec:authorize>
+					<sec:authorize access="isAnonymous()">
+						<img src="/resources/img/defaultProfile.jpg">
+					</sec:authorize>
+						
+						<p class="boardCommentWriter">작성자</p>
+					</div>
+					<textarea maxlength="150" class="doWriteContent" placeholder="150자이내 작성"></textarea>
+					<button type="button" class="btn btn-primary doWriteBtn">작성</button>
+				</div>
+				
+			
+			
 		</div>
 		
 	</div>
@@ -131,11 +213,66 @@
 				var selectVal = '${oneInfo.brd_category}';
 				$('.boardCategory').val(selectVal).prop('selected',true)
 				$('.boardCategory').attr('disabled',true);
+				$('.boardContent, .boardTitle, .boardWriter').css('backgroundColor','#fafafa')
 				
 			}
 			
 			
+			//댓글작성
+			$('.doWriteBtn').click(function(){
+				if('${loginUserSec }' == ''){
+					alert("로그인 후 이용해주세요")
+					return;
+				} 
+				
+				var header = $("meta[name='_csrf_header']").attr("content");
+	        	var token = $("meta[name='_csrf']").attr("content");
+				$.ajax({
+					type:"post",
+					url:"/devst/user/board/comment",
+					data: {
+						memId:'${loginUserSec.memId }',//로그인유저
+						brdId:'${oneInfo.brd_id }',//게시글no
+						content:$('.doWriteContent').val()
+					},
+					dataType:'json',
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(header, token);	// 헤드의 csrf meta태그를 읽어 CSRF 토큰 함께 전송
+					},
+					success:function(result){
+						console.log(result.jsonData)
+						var item = '<div class="boardComment">'
+										+'<div class="boardCommentDesc">'
+											+'<div class="profileImg">'
+												+'<img src="https://placehold.it/120x120">'
+												+'<p class="boardCommentWriter">${loginUserSec.memNickname}</p>'
+											+'</div>'
+											+'<p class="boardCommentContent">'+result.jsonData.content+'</p>'
+											+'<div class="boardCommentBtn">'
+												+'<i class="far fa-thumbs-up">'+result.jsonData.likeCount+'</i>'
+												+'<i class="far fa-thumbs-down">'+result.jsonData.dislikeCount+'</i>'
+											+'</div>'
+										+'</div>'
+									'+</div>';
+						
+						$('.boardCommentWrap').prepend(item);
+						$('.doWriteContent').val('');
+						alert('댓글작성에 성공했습니다.')
+						if('${loginUserSec.memProfileImage}' != null){
+							$('.boardComment:nth-child(1)').find('.profileImg > img').attr('src','/resources/img/defaultProfile.jpg')
+						} else {
+							$('.boardComment:nth-child(1)').find('.profileImg > img').attr('src','${loginUserSec.memProfileImage}')
+						}
+					},error:function(){
+						console.log('댓글 ajax 에러')
+					}
+				})		
+			})
+					
+			
 		})
+		
+		
 	
 	</script>
 </body>

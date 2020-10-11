@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import kr.co.devst.model.BoardVO;
+import kr.co.devst.model.CommentVO;
 import kr.co.devst.utils.Utils;
 
 
@@ -106,6 +107,26 @@ public class BoardDaoImple implements BoardDao{
 	public int boardMaxPageNum(String category) {
 		
 		return sqlSession.selectOne(NAME_SPACE+".boardMaxPageNum",category);
+	}
+
+
+
+
+	@Override
+	public int dowriteBrdComment(CommentVO param) {
+		return sqlSession.insert(NAME_SPACE+".dowriteBrdComment",param);
+	}
+
+
+
+
+	@Override
+	public List<Map<String, String>> getBrdComment5(int start, int num, int brdNum) {
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("start", start);
+		map.put("num", num);
+		map.put("brdNum", brdNum);
+		return sqlSession.selectList(NAME_SPACE+".getBrdComment5",map);
 	}
 
 
