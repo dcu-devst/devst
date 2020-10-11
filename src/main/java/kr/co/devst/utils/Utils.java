@@ -37,7 +37,7 @@ public class Utils {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		
+		System.out.println("파싱된 숫자는 : "+num);
 		
 		return result;
 	}
@@ -67,7 +67,7 @@ public class Utils {
 	public static String uploadFile(MultipartFile multiFile, String filePath, HttpServletRequest request, String depth) {
 		String fileName = multiFile.getOriginalFilename();//db저장될 파일명
 		System.out.println("mulitFile : "+fileName);
-		String path = request.getSession().getServletContext().getRealPath("uploadImg");
+		String path = request.getSession().getServletContext().getRealPath("/resources/uploadImg");
 		if(filePath != null) {
 			path= path+"/"+filePath;
 		}

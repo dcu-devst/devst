@@ -39,6 +39,11 @@ public class UserServiceImple implements UserService{
 		return userDao.doJoin(userVO);
 	}
 
+	@Override
+	public int modUserInfo(UserVO param) {
+		return userDao.modUserInfo(param);
+	}
+
 	
 
 

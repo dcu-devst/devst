@@ -26,12 +26,12 @@
 <meta charset="UTF-8">
 <title>Login</title>
 </head>
-<body>s
+<body>
       <br><br>
       <div class="container text-center">
           <h1>Devst</h1><br>
       </div>
-      <div class="container col-md-4">
+      <div class="container col-md-4" >
 	      <form class="px-4 py-3" action="/login" method="post">
 	          <div class="form-group">
 	              <label for="exampleDropdownFormEmail1">ID</label>
@@ -55,10 +55,11 @@
 	          <input name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}"/>
 	          <button type="submit" class="btn btn-primary">Sign in</button>
 	      </form>
+	      
 <!-- 	      <div class="dropdown-divider"></div>
 	      <a class="dropdown-item" href="#">New around here? Sign up</a>
 	      <a class="dropdown-item" href="#">Forgot password?</a> -->
 	  </div>
-</body>
+	  <div class="dummy" style="margin-bottom: 200px;"></div>
 </body>
 </html>

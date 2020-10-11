@@ -9,8 +9,22 @@
 		VALUES ( #{brdTitle}, #{brdContent}, #{brdCategory}, #{brdHashtag}, #{brdImage}, #{memId});
 	</insert>
 	
+	<insert id="dowriteBrdComment">
+		INSERT INTO comment_tb (brd_id, mem_id, content) VALUES(#{brdId}, #{memId}, #{content});
+	</insert>
+	
 	<select id="getBoardListAll" resultType="BoardVO">
 		SELECT * FROM board_tb;
+	</select>
+	
+	<select id="getBrdComment5" resultType="HashMap" parameterType="hashMap">
+		SELECT A.*, B.mem_nickname, IFNULL(B.mem_profile_image,"") AS profile_img
+		FROM comment_tb AS A
+		INNER JOIN member_tb AS B
+		ON A.mem_id = B.mem_id
+		where brd_id = #{brdNum}
+		ORDER BY A.comment_id DESC
+		LIMIT #{start}, #{num};
 	</select>
 	
 	<select id="getMainBoardList10" resultType="HashMap" parameterType="hashMap">
@@ -87,6 +101,8 @@
 	<update id="boardUpHits">
 		UPDATE board_tb SET brd_view_count = brd_view_count + 1 WHERE brd_id = #{brdId};
 	</update>
+	
+	
 	
 	
 	

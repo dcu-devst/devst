@@ -5,7 +5,7 @@
 <mapper namespace="kr.co.devst.dao.SecurityUserAuthDAO">
 	<select id="selectUserById" resultType="UserVO">
 		SELECT 
-			mem_id, mem_email, mem_password, mem_authority, mem_enabled, mem_nickname
+			mem_id, mem_email, mem_password, mem_authority, mem_enabled, mem_nickname, mem_profile_image
 		FROM
 			member_tb
 		WHERE

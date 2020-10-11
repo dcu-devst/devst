@@ -34,6 +34,11 @@ public class UserDaoImple implements UserDao{
 		return  sqlSession.insert(NAME_SPACE+".doJoin", userVO);
 	}
 
+	@Override
+	public int modUserInfo(UserVO param) {
+		return sqlSession.update(NAME_SPACE+".modUserInfo",param);
+	}
+
 	
 
 }

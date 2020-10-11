@@ -12,6 +12,6 @@ public interface UserDao {
 	// 회원가입
 	public int doJoin(UserVO userVO) throws Exception;
 
-	
+	public int modUserInfo(UserVO param);
 	
 }

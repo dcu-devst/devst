@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.devst.model.BoardVO;
+import kr.co.devst.model.CommentVO;
 import kr.co.devst.model.UserVO;
 import kr.co.devst.service.BoardService;
 import kr.co.devst.utils.Utils;
@@ -252,11 +253,12 @@ public class BoardController {
 		  
 		  
 		  HashMap<String, String> boardOneInfoMap = boardService.getBoardOneInfo(param);
-		  
+		  List<Map<String, String>> commentList = boardService.getBrdComment5(0, 5,id);
 		  if(boardOneInfoMap == null) {//잘못된 접근 
 			  return "/"; 
 		  } 
 		  model.addAttribute("oneInfo",boardOneInfoMap);
+		  model.addAttribute("commentList", commentList);
 		  
 	  
 	  
@@ -268,7 +270,31 @@ public class BoardController {
 		  return "/user/certified";
 	  }
 	 
-	
-	
+	//댓글
+	  @ResponseBody
+	  @RequestMapping(value = "/devst/user/board/comment", method = RequestMethod.POST, produces ="application/text; charset=utf8")
+	  public String doWriteBrdContent(@Valid CommentVO commentVO, BindingResult bindReulst) {
+		  	
+		  if(bindReulst.hasErrors() || commentVO.getBrdId() == 0 || commentVO.getMemId() == 0) {//클라이언트 전송에러
+				List<ObjectError> list =  bindReulst.getAllErrors();
+				String msg = "글 쓰기에 실패했습니다";
+	            for(ObjectError e : list) {
+	            	msg+="\n"+e.getDefaultMessage();
+	                 System.out.println("error : "+e.getDefaultMessage());   
+	            }
+	            return "error";
+			}
+		  log.debug("valid방식::: "+commentVO.getBrdId());
+		  log.debug("valid방식::: "+commentVO.getMemId());
+		  log.debug("valid방식::: "+commentVO.getContent());
+		  int result = boardService.dowriteBrdComment(commentVO);
+		  System.out.println("result : "+result);
+		  
+		  JSONObject json = new JSONObject();
+		  json.put("jsonData", commentVO);
+		  
+		  return json.toString();
+		  
+	  }
 	
 }
