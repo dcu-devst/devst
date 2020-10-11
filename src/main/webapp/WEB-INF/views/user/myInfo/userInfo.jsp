@@ -20,7 +20,7 @@
 		<div class="myNickname">
 			${myInfo.memNickname }
 		</div>
-		현재 : <img src="/resources/uploadImg/profile/15/${myInfo.memProfileImage }">
+		현재 : <img src="/resources/uploadImg/profile/${myInfo.memId }/${myInfo.memProfileImage }">
 		<form action="/devst/user/info?${_csrf.parameterName}=${_csrf.token}"  method="post" enctype="multipart/form-data">
 			<input type="file" name="multiFile" class="boardImg" accept="image/*">
 			<input type="submit" value="변경">
