@@ -50,7 +50,7 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
-			<beans:bean id="loggerInterceptor"
+			<beans:bean id="LoggerInterceptor"
 				class="kr.co.devst.logger.LoggerInterceptor"></beans:bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
