@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import kr.co.devst.model.BoardEvalVO;
 import kr.co.devst.model.BoardVO;
 import kr.co.devst.model.CommentVO;
 import kr.co.devst.model.UserVO;
@@ -88,6 +89,10 @@ public class BoardController {
 	
 	@RequestMapping(value = "/devst/board/regmod", method = RequestMethod.GET)
 	public String goBoardRegMod(Model model) {
+		
+		
+		
+		
 		log.debug("********* 게시판 작성 페이지  *********");
 		return "/user/board/regMod.tilesAll";
 	}
@@ -246,10 +251,10 @@ public class BoardController {
 		  if(id == 0 || no == 0) {//올바르진 않은 접근
 			  return "/user/board/board"; 
 		  }
-		  param = new BoardVO(); param.setBrdId(id);
+		  param = new BoardVO();
+		  param.setBrdId(id);
 		  param.setBrdCategory(Utils.MappingCategory(no));
 		  
-		  //param.setBrdId(1000);//게시물 번호가 1000번인 게시물은 없다 작업실패
 		  
 		  
 		  HashMap<String, String> boardOneInfoMap = boardService.getBoardOneInfo(param);
@@ -257,6 +262,14 @@ public class BoardController {
 		  if(boardOneInfoMap == null) {//잘못된 접근 
 			  return "/"; 
 		  } 
+		  
+		  UserVO loginUser = (UserVO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		  Map<String, Integer> map = new HashMap<String, Integer>();
+		  map.put("memId", loginUser.getMemId());
+		  map.put("brdId", id);
+		  
+		  
+		  model.addAttribute("currentEval", boardService.getCurrentBrdEval(map));
 		  model.addAttribute("oneInfo",boardOneInfoMap);
 		  model.addAttribute("commentList", commentList);
 		  
@@ -295,6 +308,31 @@ public class BoardController {
 		  
 		  return json.toString();
 		  
+	  }
+	  
+	  @ResponseBody
+	  @RequestMapping(value = "/devst/user/board", method = RequestMethod.GET )
+	  public String goBoardEval(@RequestParam(value = "brdId", required = true)int brdId, @RequestParam(value = "memId", required = true)int memId, @RequestParam(value = "idx", required = true)int idx) {
+		  
+		  BoardEvalVO param = new BoardEvalVO();
+		  String html = "";
+		  param.setBrdId(brdId);
+		  param.setMemId(memId);
+		  if(idx == 0) {//좋아요
+			  param.setEvalCount(1);
+			  html = "blue";
+		  } else if(idx == 1) {//싫어요
+			  param.setEvalCount(-1);;
+			  html = "red";
+		  }
+		  int result = boardService.boardEval(param);
+		  log.debug("result :::::::"+result);
+		  if(result != 1) {
+			  html = "<p>알수없는 에러발생</p>";
+		  }
+		  
+		  
+		  return html;
 	  }
 	
 }

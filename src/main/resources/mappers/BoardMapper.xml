@@ -32,8 +32,6 @@
 		FROM member_tb as A
 		INNER JOIN board_tb as B
 		ON A.mem_id = B.mem_id
-		
-		
 		<if test="category != null">
 		
 			<trim prefix="ORDER BY" >
@@ -49,13 +47,14 @@
 			</trim>
 			LIMIT 0,10;
 		</if>
-			
-			
-		
-		
-		
-		
+
 	</select>
+	
+	<select id="getCurrentBrdEval" parameterType="hashMap" resultType="integer"><!--과거 좋아요 누를글이면 1 싫어요는 -1 누른적없으면 0  -->
+			SELECT IFNULL(MAX(eval_count), 0) AS eval_count 
+			FROM board_eval_tb WHERE mem_id = #{memId} AND brd_id = #{brdId};
+	</select>
+	
 	
 	<select id="getBoardStudyList" resultType="HashMap" parameterType="hashMap" ><!--스터디구인게시물  -->
 		<!-- SELECT * FROM t_board where category='스터디구인' order by board_pk desc limit #{start}, #{num}; -->
@@ -102,7 +101,30 @@
 		UPDATE board_tb SET brd_view_count = brd_view_count + 1 WHERE brd_id = #{brdId};
 	</update>
 	
+	<update id="modBoardLikeOrDisLike" parameterType="int">
+		<trim prefix="UPDATE board_tb SET " 
+			  suffix="	WHERE brd_id = 
+					(SELECT brd_id FROM board_eval_tb where eval_id = 
+						(SELECT MAX(eval_id) AS eval_id FROM board_eval_tb)
+					);" >
+		
+		
+			<if test="value == 1">
+				brd_like_count = brd_like_count + 1
+			</if>
+			<if test="value == -1">
+				brd_dislike_count = brd_dislike_count + 1
+			</if>
+		</trim>	
+	</update>
 	
+	<insert id="boardEval" >
+		
+	
+		INSERT INTO board_eval_tb (mem_id, brd_id, eval_count)
+		VALUES(#{memId}, #{brdId}, #{evalCount});
+	</insert>	
+		 
 	
 	
 	

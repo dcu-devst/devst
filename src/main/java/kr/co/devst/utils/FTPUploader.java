@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
 
@@ -43,8 +44,11 @@ public class FTPUploader {
 	    //param( 보낼파일경로+파일명, 호스트에서 받을 파일 이름, 호스트 디렉토리, 저장할 폴더명, 저장할 userId(pk) )
 	    public void uploadFile(String localFileFullName, String fileName, String hostDir,String category, String depth) throws Exception {
 	        try(InputStream input = new FileInputStream(new File(localFileFullName))){
+	        	
 	        	if(category != null && depth != null) {
-	        		this.ftp.storeFile(hostDir+"/"+category+"/"+depth+fileName, input);
+	        		Mkdirs(ftp, "/home/user"+"/"+category);
+	        		Mkdirs(ftp, "/home/user"+"/"+category+"/"+depth);
+	        		this.ftp.storeFile(hostDir+"/"+category+"/"+depth+"/"+fileName, input);//업로드
 	        	}
 	        	if(depth == null) {
 	        		this.ftp.storeFile(hostDir+"/"+category+"/"+fileName, input);
@@ -53,7 +57,6 @@ public class FTPUploader {
 	        		this.ftp.storeFile(hostDir+"/"+fileName, input);
 	        	}
 	        	
-		        //storeFile() 메소드가 전송하는 메소드
 	        } catch (Exception e) {
 				e.printStackTrace();
 				System.out.println("여기문제");
@@ -62,6 +65,7 @@ public class FTPUploader {
 	    public void uploadFile(String localFileFullName, String fileName, String hostDir) throws Exception{
 	    	uploadFile(localFileFullName,  fileName,  hostDir, null, null);
 	    }
+	  
 	 
 	    public void disconnect(){
 	        if (this.ftp.isConnected()) {
@@ -74,15 +78,43 @@ public class FTPUploader {
 	            }
 	        }
 	    }
+	    
+	    public  void Mkdirs(FTPClient ftp, String path) {
+	    	try {
+	    		this.ftp.makeDirectory(path);
+	    	}catch (Exception e) {
+	    		e.printStackTrace();
+	    	}
+	    	
+	    }
+	    
+	    public FTPFile[] getFiles(String path) throws Exception{
+	    	FTPFile[] ftpFiles = this.ftp.listFiles(path);
+	    	
+	    	if(ftpFiles != null) {
+	    		for (int i = 0; i<ftpFiles.length; i++) {
+	    			FTPFile file = ftpFiles[i];
+	    		}
+	    	}
+	    	return ftpFiles;
+	    			
+	    }
+	    
 	    public static void main(String[] args) throws Exception {
 	        System.out.println("Start");
-	        //FTPUploader ftpUploader = new FTPUploader("34.64.185.43", "root", "dltmdgns1!");
-	        FTPUploader ftpUploader = new FTPUploader("34.64.185.43", "user", "user");
+	        FTPUploader ftpUploader = new FTPUploader("34.64.185.43", "root", "dltmdgns1!");
 	        //ftpUploader.uploadFile("C:/Users/img.jpg", "123.jpg", "/home/user", "profile", "13");
-	        ftpUploader.uploadFile("C:/Users/img.jpg", "123.jpg", "/home/user");
-	        ftpUploader.disconnect();
-	        System.out.println("Done");
-	    }
+	        	
+	        	
+	        	ftpUploader.uploadFile("C:/Users/img.jpg", "123.jpg", "/home/user", "profile", "13");	
+
+				ftpUploader.disconnect();
+				System.out.println("Done");
+			}
+	        
+	        
+	        
+	    
 
 
 

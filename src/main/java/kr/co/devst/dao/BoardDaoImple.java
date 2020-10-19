@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import kr.co.devst.model.BoardEvalVO;
 import kr.co.devst.model.BoardVO;
 import kr.co.devst.model.CommentVO;
 import kr.co.devst.utils.Utils;
@@ -63,9 +64,9 @@ public class BoardDaoImple implements BoardDao{
 
 
 
-
 	@Override
 	public HashMap<String, String> getBoardOneInfo(BoardVO param) {
+		
 		return sqlSession.selectOne(NAME_SPACE+".getBoardOneInfo",param);
 	}
 
@@ -127,6 +128,30 @@ public class BoardDaoImple implements BoardDao{
 		map.put("num", num);
 		map.put("brdNum", brdNum);
 		return sqlSession.selectList(NAME_SPACE+".getBrdComment5",map);
+	}
+
+
+
+
+	@Override
+	public int boardEval(BoardEvalVO param) {
+		return sqlSession.insert(NAME_SPACE+".boardEval",param);
+	}
+
+
+
+
+	@Override
+	public int modBoardLikeOrDisLike(int eval) {
+		return sqlSession.update(NAME_SPACE+".modBoardLikeOrDisLike",eval);
+	}
+
+
+
+
+	@Override
+	public int getCurrentBrdEval(Map<String, Integer> map) {
+		return sqlSession.selectOne(NAME_SPACE+".getCurrentBrdEval",map);
 	}
 
 
