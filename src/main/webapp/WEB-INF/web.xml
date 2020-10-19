@@ -11,6 +11,7 @@
 			/WEB-INF/spring/appServlet/servlet-context.xml
 			/WEB-INF/spring/context-common.xml
 			/WEB-INF/spring/context-security.xml
+			/WEB-INF/spring/context-transaction.xml
 			
 		</param-value>
 	</context-param>

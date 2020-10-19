@@ -47,12 +47,16 @@
 	.boardCommentBtn > i{font-size: 20px; cursor:pointer; margin:10px;}
 	.boardCommentBtn > i:nth-child(1):hover{color:blue;}
 	.boardCommentBtn > i:nth-child(2):hover{color:red;}
+	.likeAndHateBtn > i:nth-child(1):hover{color:blue; cursor:pointer;}
+	.likeAndHateBtn > i:nth-child(2):hover{color:red;cursor:pointer;}
 	.doWriteBox{overflow: hidden; position: relative; height: 180px;}
 	.doWriteContent{width:658px; padding: 0; height: 120px; font-size: 16px; padding-top: 20px;}
 	.doWriteBtn{position: absolute; right: 3px; bottom: 0px;}
+	.likeAndHateBtn{float:right;}
 </style>
 </head>
 <body>
+	${currentEval }<br>
 	
 	<a href="${boardList }">게시글 더 보기</a>
 	${loginUserSec }
@@ -91,6 +95,10 @@
 				</div>
 				 
 			</form>
+			<div class="likeAndHateBtn">
+				<i class="far fa-thumbs-up likeBtn">12</i>
+				<i class="far fa-thumbs-down disLikeBtn">12</i>
+			</div>
 			
 		</div>
 		
@@ -210,6 +218,15 @@
 		
 		
 		$(function(){
+			
+			if('${currentEval }' == 1){
+				$('.likeBtn').css('color','blue')
+			} else if('${currentEval }' == -1){
+				$('.disLikeBtn').css('color','red')
+			}
+			
+			
+			
 			if('${guestMode}' == 'readonly'){//방문자일때 selectbox disabled
 				var selectVal = '${oneInfo.brd_category}';
 				$('.boardCategory').val(selectVal).prop('selected',true)
@@ -217,6 +234,46 @@
 				$('.boardContent, .boardTitle, .boardWriter').css('backgroundColor','#fafafa')
 				
 			}
+			
+			
+			//좋아요 싫어요
+			
+			$('.likeAndHateBtn > i').click(function(){
+				if('${loginUserSec.memId}' == ''){
+					alert('로그인 후 이용가능합니다.');
+					return;
+				}
+				var idx = $(this).index();
+				
+				if(idx == 0){//좋아요
+					
+				} else if(idx == 1 ){//싫어요
+					
+				}				
+				
+				$.ajax({
+					
+					url:'/devst/user/board',
+					dataType: "html",
+					data:{
+						idx : idx,
+						brdId : '${oneInfo.brd_id}',
+						memId : '${loginUserSec.memId}'
+					},
+					
+					success : function(result){
+						if(result == 'blue')
+							$('.likeBtn').css('color', result)
+						if(result == 'red')
+							$('.disLikeBtn').css('color', result)
+						
+					},
+					error: function(){
+						console.log('ajax 에러')
+					}
+					
+				})
+			})
 			
 			
 			//댓글작성

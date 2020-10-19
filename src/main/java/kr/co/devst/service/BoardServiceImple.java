@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.devst.dao.BoardDao;
+import kr.co.devst.model.BoardEvalVO;
 import kr.co.devst.model.BoardVO;
 import kr.co.devst.model.CommentVO;
 
@@ -78,6 +79,7 @@ public class BoardServiceImple implements BoardService{
 	@Transactional
 	@Override
 	public HashMap<String, String> getBoardOneInfo(BoardVO param) {
+		
 		boardDao.boardUpHits(param.getBrdId());	//조회수 증가 작업
 		return boardDao.getBoardOneInfo(param);	//해당 게시물 select 작업
 	}
@@ -135,6 +137,32 @@ public class BoardServiceImple implements BoardService{
 	@Override
 	public List<Map<String, String>> getBrdComment5(int start, int num, int brdNum) {
 		return boardDao.getBrdComment5(start, num, brdNum);
+	}
+
+
+	
+	@Transactional
+	@Override
+	public int boardEval(BoardEvalVO param) {
+		
+			
+			int result1 = boardDao.boardEval(param);
+			int result2 = boardDao.modBoardLikeOrDisLike(param.getEvalCount());
+			
+		return result1 * result2;
+	}
+
+	
+	@Override
+	public int modBoardLikeOrDisLike(int eval) {
+		return boardDao.modBoardLikeOrDisLike(eval);
+	}
+
+
+
+	@Override
+	public int getCurrentBrdEval(Map<String, Integer> map) {
+		return boardDao.getCurrentBrdEval(map);
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import kr.co.devst.model.BoardEvalVO;
 import kr.co.devst.model.BoardVO;
 import kr.co.devst.model.CommentVO;
 
@@ -22,4 +23,8 @@ public interface BoardService {
 	public int boardMaxPageNum(String category);
 	public int dowriteBrdComment(CommentVO param);
 	public List<Map<String, String>> getBrdComment5(int start, int num, int brdNum);
+	
+	public int boardEval(BoardEvalVO param);
+	public int modBoardLikeOrDisLike(int eval);
+	public int getCurrentBrdEval(Map<String, Integer> map);
 }
